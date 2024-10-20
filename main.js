@@ -91,6 +91,15 @@ app.whenReady().then(() => {
     return win.webContents.isAudioMuted();
   });
 
+  // Добавляем функционал пресетов
+  ipcMain.on('set-preset', (event, preset) => {
+    if (preset === 'compact') {
+      win.setSize(420, 308);  // Компактный HAWK
+    } else if (preset === 'long') {
+      win.setSize(658, 335);  // Длинный HAWK
+    }
+  });
+
   // Сохраняем позицию и размеры окна при закрытии
   win.on('close', () => {
     saveWindowState();

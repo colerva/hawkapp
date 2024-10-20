@@ -83,10 +83,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // Обработка клавиш "R", "Q" и выбора карты
   document.addEventListener('keydown', function(event) {
     if (event.key === 'r' || event.key === 'R' || event.key === 'к' || event.key === 'К') {
-      window.scrollTo({
-        top: 429,
-        behavior: 'smooth'
-      });
+      performScroll(); // Используем новую функцию performScroll
     }
 
     if (event.key === 'q' || event.key === 'Q' || event.key === 'й' || event.key === 'Й') {
@@ -105,14 +102,38 @@ window.addEventListener('DOMContentLoaded', () => {
       selectMap(2);
       autoScrollAfterMapSelect();
     }
+
+    // Переключение пресетов на Z (я) и X (ч)
+    if (event.key === 'z' || event.key === 'я') {
+      ipcRenderer.send('set-preset', 'compact');  // Компактный HAWK
+    } else if (event.key === 'x' || event.key === 'ч') {
+      ipcRenderer.send('set-preset', 'long');  // Длинный HAWK
+    }
   });
 
+  // Функция для автоскролла с учётом ширины окна
+  function performScroll() {
+    const windowWidth = window.innerWidth;
+
+    // Устанавливаем значения скролла в зависимости от ширины окна
+    const scrollValue = windowWidth > 620 ? 338 : 425; // <- Измените здесь значение по вашему желанию
+
+    console.log(`Ширина окна: ${windowWidth}, значение скролла: ${scrollValue}`);
+
+    window.scrollTo({
+      top: scrollValue,
+      behavior: 'smooth'
+    });
+  }
+
+  // При первой загрузке выполняем автоскролл
   window.addEventListener('load', function() {
     if (sessionStorage.getItem('refreshAndClick') === 'true') {
       sessionStorage.removeItem('refreshAndClick');
       waitForButtonAndClick();
     }
     checkAudioMutedState();  // Проверяем состояние звука при загрузке страницы
+    performScroll();  // Выполняем автоскролл при первой загрузке страницы
   });
 
   let isScrolling;
