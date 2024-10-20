@@ -38,6 +38,28 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Удаление кнопки "Сделать ставку" с помощью MutationObserver
+  function removeBetButtons() {
+    // Удаляем обе версии кнопки с разными классами
+    const betButtons = document.querySelectorAll(
+      'button.v-btn.v-btn--elevated.v-theme--light.v-btn--density-default.v-btn--size-default.v-btn--variant-elevated.bg-primary.label-primary, ' +
+      'button.v-btn.v-btn--elevated.v-theme--light.v-btn--density-default.v-btn--size-small.v-btn--variant-elevated.bg-primary.label-primary'
+    );
+
+    betButtons.forEach(button => {
+      button.remove();
+      console.log('Кнопка "Сделать ставку" удалена.');
+    });
+  }
+
+  // Используем MutationObserver для отслеживания изменений в DOM и удаления кнопки
+  const observer = new MutationObserver(() => {
+    removeBetButtons();  // Проверяем и удаляем кнопку при любых изменениях в DOM
+  });
+
+  // Начинаем отслеживание изменений в body
+  observer.observe(document.body, { childList: true, subtree: true });
+
   // Ожидание кнопки выбора карты и её нажатие
   function waitForButtonAndClick() {
     let mapButton = document.getElementById('match-view-series-menu');
@@ -134,6 +156,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     checkAudioMutedState();  // Проверяем состояние звука при загрузке страницы
     performScroll();  // Выполняем автоскролл при первой загрузке страницы
+  });
+
+  // Слушаем сообщение от main.js для выполнения автоскролла после изменения пресета
+  ipcRenderer.on('perform-scroll', () => {
+    performScroll();  // Выполняем автоскролл после смены пресета
   });
 
   let isScrolling;

@@ -94,10 +94,15 @@ app.whenReady().then(() => {
   // Добавляем функционал пресетов
   ipcMain.on('set-preset', (event, preset) => {
     if (preset === 'compact') {
-      win.setSize(420, 308);  // Компактный HAWK
+      win.setSize(420, 303);  // Компактный HAWK
     } else if (preset === 'long') {
       win.setSize(658, 335);  // Длинный HAWK
     }
+
+    // После смены пресета, отправляем сообщение на фронтенд для скролла
+    setTimeout(() => {
+      win.webContents.send('perform-scroll'); // Отправляем сообщение на preload.js
+    }, 300); // Задержка, чтобы дать окну время поменять размер
   });
 
   // Сохраняем позицию и размеры окна при закрытии
