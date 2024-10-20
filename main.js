@@ -60,6 +60,16 @@ app.whenReady().then(() => {
   // Загружаем ваш сайт
   win.loadURL('https://hawk.live');
 
+  // Скроллирование при первой загрузке страницы
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.executeJavaScript(`
+      if (!sessionStorage.getItem('scrolled')) {
+        window.scrollTo(0, 500);  // Скроллим на 500 пикселей
+        sessionStorage.setItem('scrolled', 'true');  // Ставим флаг, что скролл был
+      }
+    `);
+  });
+
   // Включаем DevTools по нажатию F12 и перезагрузку по F5
   win.webContents.on('before-input-event', (event, input) => {
     if (input.key === 'F12') {
@@ -74,6 +84,11 @@ app.whenReady().then(() => {
   // Слушаем команду на отключение/включение звука
   ipcMain.on('toggle-mute', (event, isMuted) => {
     win.webContents.setAudioMuted(isMuted);
+  });
+
+  // Возвращаем текущее состояние звука
+  ipcMain.handle('get-audio-muted', () => {
+    return win.webContents.isAudioMuted();
   });
 
   // Сохраняем позицию и размеры окна при закрытии

@@ -21,6 +21,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let isMuted = false;
 
+  // Проверка фактического состояния звука при загрузке
+  function checkAudioMutedState() {
+    ipcRenderer.invoke('get-audio-muted').then((muted) => {
+      isMuted = muted;
+      muteIndicator.style.opacity = isMuted ? '1' : '0';  // Синхронизируем плашку
+    });
+  }
+
   // Отключение звука по нажатию "S" или "Ы"
   document.addEventListener('keydown', (event) => {
     if (event.key === 's' || event.key === 'S' || event.key === 'ы' || event.key === 'Ы') {
@@ -104,6 +112,7 @@ window.addEventListener('DOMContentLoaded', () => {
       sessionStorage.removeItem('refreshAndClick');
       waitForButtonAndClick();
     }
+    checkAudioMutedState();  // Проверяем состояние звука при загрузке страницы
   });
 
   let isScrolling;
