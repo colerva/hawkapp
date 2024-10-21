@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, nativeTheme } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -47,8 +47,12 @@ app.whenReady().then(() => {
     height: windowState.height || 600,
     x: windowState.x || undefined,
     y: windowState.y || undefined,
+    icon: path.join(__dirname, 'icons', 'app-icon.ico'),  // Добавляем иконку
+    backgroundColor: '#FF69B4', // Устанавливаем розовый цвет для фона окна
+    titleBarStyle: 'hiddenInset', // Прячем стандартный тулбар, чтобы добавить собственный стиль
+    trafficLightPosition: { x: 10, y: 10 }, // Позиция кнопок управления окном (для macOS)
     webPreferences: {
-      preload: __dirname + '/preload.js',
+      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
       contextIsolation: false
     }

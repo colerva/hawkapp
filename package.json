@@ -1,16 +1,64 @@
 {
   "name": "hawk-app",
   "version": "1.0.0",
-  "main": "main.js",  
+  "main": "main.js",
   "scripts": {
-    "start": "electron .",  
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron-forge start",
+    "build": "electron-builder",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "keywords": [],
-  "author": "",
+  "author": "Stasw",
   "license": "ISC",
-  "description": "",
+  "description": "This is the Hawk Electron Application.",
   "devDependencies": {
+    "@electron-forge/cli": "^7.5.0",
+    "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-rpm": "^7.5.0",
+    "@electron-forge/maker-squirrel": "^7.5.0",
+    "@electron-forge/maker-zip": "^7.5.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
+    "@electron-forge/plugin-fuses": "^7.5.0",
+    "@electron/fuses": "^1.8.0",
     "electron": "^33.0.1"
+  },
+  "build": {
+    "appId": "com.yourcompany.hawkapp",
+    "productName": "Hawk Electron App",
+    "icon": "icons/app-icon.ico",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "icons/app-icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "icons/app-icon.ico",
+      "uninstallerIcon": "icons/app-icon.ico",
+      "shortcutName": "Hawk",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "icons/app-icon.icns"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!*.map"
+    ]
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1"
   }
 }
